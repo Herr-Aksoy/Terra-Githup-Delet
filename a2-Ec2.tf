@@ -5,6 +5,7 @@ resource "aws_instance" "Docker-Machine" {
   instance_type =  "t3a.medium"             # "t2.micro"  #
   key_name      = var.user_name
   user_data     = file("./userdata/docker-machine.sh")
+  depends_on = [ aws_key_pair.Mykeypair ]
   tags = {
     Name = "Docker-Machine"
   }
