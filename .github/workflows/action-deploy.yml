@@ -45,18 +45,26 @@ jobs:
            echo "::set-output name=docker_machine_private_ip::$(terraform output Docker-Machine-private-ip)"
            echo "::set-output name=docker_machine_ssh_command::$(terraform output Docker-Machine-ssh-command)"
 
-    - name: Save Terraform Private Key as Artifact
-      if: github.event.inputs.action == 'apply'
-      run: echo "::set-output name=private_key_path::$(terraform output private_key_path)"
-      shell: bash
+    - name: Wait for user input
+      if: github.event.inputs.action == 'apply'  # Bu adımı sadece kaynakları oluşturmak için çalıştırdığınızda ekleyin
+      run: |
+           echo "Kaynaklar oluşturuldu. Devam etmek için [devam], silmek için [sil] yazın."
+           read input
+           echo "Kullanıcı girdisi: $input"  # Kullanıcı girdisiyi görüntüleme (isteğe bağlı)
 
-    - name: Upload SSH Key as artifact
-      if: github.event.inputs.action == 'apply'
-      uses: actions/upload-artifact@v2
-      with:
-        name: deployer-key
-        path: ${{ steps.save_private_key.outputs.private_key_path }}
+    - name: Process user input
+      if: github.event.inputs.action == 'apply' && steps.wait_for_user_input.outputs.exit_status == '0'
+      run: |
+          if [[ "$input" == "devam" ]]; then
+          echo "Devam ediliyor..."
+          elif [[ "$input" == "sil" ]]; then
+          echo "Kaynaklar siliniyor..."
+          terraform destroy -auto-approve
+          else
+          echo "Geçersiz giriş. İşlem iptal ediliyor."
+          fi
 
     - name: Terraform Destroy
       if: github.event.inputs.action == 'destroy'
       run: terraform destroy -auto-approve
+
