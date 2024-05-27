@@ -46,11 +46,11 @@ jobs:
            echo "::set-output name=docker_machine_ssh_command::$(terraform output Docker-Machine-ssh-command)"
 
     - name: Wait for user input
-      if: github.event.inputs.action == 'apply'  # Bu adımı sadece kaynakları oluşturmak için çalıştırdığınızda ekleyin
+      if: github.event.inputs.action == 'apply'
       run: |
            echo "Kaynaklar oluşturuldu. Devam etmek için [devam], silmek için [sil] yazın."
            read input
-           echo "Kullanıcı girdisi: $input"  # Kullanıcı girdisiyi görüntüleme (isteğe bağlı)
+           echo "Kullanıcı girdisi: $input"
 
     - name: Process user input
       if: github.event.inputs.action == 'apply' && steps.wait_for_user_input.outputs.exit_status == '0'
@@ -64,7 +64,8 @@ jobs:
           echo "Geçersiz giriş. İşlem iptal ediliyor."
           fi
 
-    - name: Terraform Destroy
-      if: github.event.inputs.action == 'destroy'
+    - name: Terraform Destroy on Error
+      if: failure() && github.event.inputs.action == 'apply'
       run: terraform destroy -auto-approve
+
 
