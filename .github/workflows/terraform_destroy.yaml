@@ -29,12 +29,14 @@ jobs:
         with:
           terraform_version: 1.8.4
 
+      - name: Download Terraform state file
+        uses: actions/download-artifact@v2
+        with:
+          name: terraform-state
+          path: .
+
       - name: Terraform init
         run: terraform init
 
-      - name: Read Terraform output
-        id: read_terraform_output
-        run: echo "::set-output name=terraform_output::$(cat terraform-output.txt)"
-
       - name: Terraform destroy
-        run: terraform destroy -auto-approve 
+        run: terraform destroy -auto-approve
