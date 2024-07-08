@@ -48,7 +48,16 @@ jobs:
           git config --global user.name "Herr-Aksoy"
           git add .
           git commit -m "Add Terraform state files"
-          git push origin main  
+          git push origin main
+      
+      - name: Check if Terraform Apply was successful
+        id: check_apply_status
+        run: echo "::set-output name=status::success"
+
+      # If Terraform Apply fails, run Terraform Destroy
+      - name: Terraform Destroy if Apply failed
+        if: ${{ steps.check_apply_status.outputs.status != 'success' }}
+        run: terraform destroy -auto-approve
 
 
 
