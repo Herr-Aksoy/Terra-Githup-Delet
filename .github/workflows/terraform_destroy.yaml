@@ -28,6 +28,9 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.8.4
+          
+      - name: Terraform init
+        run: terraform init
 
       - name: Read Terraform output
         id: read_terraform_output
