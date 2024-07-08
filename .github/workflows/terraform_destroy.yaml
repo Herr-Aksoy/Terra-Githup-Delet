@@ -22,7 +22,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 
+          aws-region: us-east-1
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
@@ -34,6 +34,9 @@ jobs:
         with:
           name: terraform-state
           path: .
+
+      - name: List files for debugging
+        run: ls -alh
 
       - name: Terraform init
         run: terraform init
