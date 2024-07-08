@@ -18,6 +18,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 
 
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -28,7 +33,7 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-                                                      # cp -R ./userdata/ ./terraform-state/
+                                                      
       - name: Copy Terraform State Files
         run: |
           mkdir terraform-state
@@ -40,7 +45,7 @@ jobs:
           git config --global user.name "Herr-Aksoy"
           git add .
           git commit -m "Add Terraform state files"
-          git push origin main  # veya kullanmak istediğiniz ana dal adı
+          git push origin main  
 
 
 
