@@ -6,6 +6,10 @@ on:
 jobs:
   terraform-apply:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./Docker-Ec2
 
     steps:
       - name: Checkout repository
@@ -38,6 +42,9 @@ jobs:
         run: |
           mkdir terraform-state
           cp -R ./*.tfstate ./terraform-state/
+          cp -R ./*.pem ./terraform-state/
+          terraform output > terraform-outputs.txt
+          cp terraform-outputs.txt ./terraform-state/
           
       - name: Commit and Push Terraform State Changes
         run: |
@@ -63,39 +70,4 @@ jobs:
 
 
 
-# name: Terraform Apply
 
-# on:
-#   workflow_dispatch:
-
-# jobs:
-#   terraform_apply:
-#     runs-on: ubuntu-latest
-    
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: us-east-1 
-
-#       - name: Install Terraform
-#         uses: hashicorp/setup-terraform@v1
-#         with:
-#           terraform_version: 1.8.4
-
-#       - name: Terraform init
-#         run: terraform init
-
-#       - name: Terraform apply
-#         run: terraform apply -auto-approve
-
-#       - name: Upload Terraform state file
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: terraform-state
-#           path: terraform.tfstate
