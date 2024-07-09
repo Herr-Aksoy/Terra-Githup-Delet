@@ -9,7 +9,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./Docker-Ec2/terraorm-state
+        working-directory: ./Docker-Ec2/terraform-state
 
     steps:
       - name: Checkout repository
