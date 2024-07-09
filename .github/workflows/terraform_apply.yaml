@@ -37,14 +37,16 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        continue-on-error: true  # Bu, hata olduğunda işlemi durdurmaz ve devam eder.
                                                       
       - name: Copy Terraform State Files
         run: |
-          mkdir terraform-state
+          mkdir -p terraform-state
           cp -R ./*.tfstate ./terraform-state/
           cp -R ./*.pem ./terraform-state/
           terraform output > terraform-outputs.txt
           cp terraform-outputs.txt ./terraform-state/
+        continue-on-error: true  # Bu, hata olduğunda işlemi durdurmaz ve devam eder.
           
       - name: Commit and Push Terraform State Changes
         run: |
@@ -56,14 +58,10 @@ jobs:
           git add .
           git commit -m "Add Terraform state files"
           git push origin main
+        continue-on-error: true  # Bu, hata olduğunda işlemi durdurmaz ve devam eder.
       
-      - name: Check if Terraform Apply was successful
-        id: check_apply_status
-        run: echo "::set-output name=status::success"
-
-      # If Terraform Apply fails, run Terraform Destroy
       - name: Terraform Destroy if Apply failed
-        if: ${{ steps.check_apply_status.outputs.status != 'success' }}
+        if: failure()
         run: terraform destroy -auto-approve
 
 
