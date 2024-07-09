@@ -41,9 +41,9 @@ jobs:
       - name: Commit and Push Terraform State Changes
         run: |
           git clone git@github.com:Herr-Aksoy/Terra-Githup-Delet.git
-          cd Terra-Githup-Delet/
-          rm -rf Docker-Ec2/terraform-state/*
-          cp ./a0-provider  Docker-Ec2/terraform-state/
+          cd Terra-Githup-Delet/Docker-Ec2/
+          rm -rf terraform-state/*
+          cp ./a0-provider.tf  Docker-Ec2/terraform-state/
           git config --global user.email "mat.aksoy06@gmail.com"
           git config --global user.name "Herr-Aksoy"
           git add .
