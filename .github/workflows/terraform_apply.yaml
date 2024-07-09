@@ -45,7 +45,8 @@ jobs:
           cp -R ./*.tfstate ./terraform-state/
           cp -R ./*.pem ./terraform-state/
           terraform output > terraform-outputs.txt
-          cp terraform-outputs.txt ./terraform-state/
+          sed -n '2,4p' terraform-outputs.txt > outputs-terraform.txt
+          cp outputs-terraform.txt ./terraform-state/
         continue-on-error: true  # Bu, hata olduğunda işlemi durdurmaz ve devam eder.
           
       - name: Commit and Push Terraform State Changes
