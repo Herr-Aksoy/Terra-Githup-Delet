@@ -1,3 +1,0 @@
-Docker-Machine-private-ip = "172.31.38.210"
-Docker-Machine-public-ip = "107.22.28.30"
-Docker-Machine-ssh-command = "ssh -i 'ramo.pem' ec2-user@107.22.28.30"
